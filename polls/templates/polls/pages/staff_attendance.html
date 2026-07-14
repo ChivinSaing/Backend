@@ -1,0 +1,79 @@
+{% extends "polls/layouts/base_app.html" %}
+{% block content %}
+  <div class="page-card" style="margin-bottom: 1rem;">
+    <h2 class="form-heading" style="margin-top: 0;">Clock in</h2>
+    <p class="cafe-help">Start of work — creates a row with <strong>clock in</strong> time. Clock out when the shift ends.</p>
+    <form method="post" action="{% url 'staff_clock_in' %}" class="cafe-form" style="max-width: 28rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end;">
+      {% csrf_token %}
+      <div class="cafe-field" style="flex: 1; min-width: 12rem; margin-bottom: 0;">
+        <label class="cafe-label" for="clock-in-staff">Staff</label>
+        <select name="staff_id" id="clock-in-staff" class="cafe-input" required>
+          <option value="">— choose —</option>
+          {% for s in staff_for_clock_in %}
+            <option value="{{ s.pk }}">{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="cafe-btn cafe-btn--primary">Clock in</button>
+    </form>
+  </div>
+
+  {% if open_shifts %}
+  <div class="page-card" style="margin-bottom: 1rem;">
+    <h2 class="form-heading" style="margin-top: 0;">Currently on shift</h2>
+    <table class="cafe-table">
+      <thead>
+        <tr>
+          <th>Staff</th>
+          <th>Clock in</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in open_shifts %}
+        <tr>
+          <td>{{ log.staff.name }}</td>
+          <td>{{ log.clock_in|date:"Y-m-d H:i" }}</td>
+          <td>
+            <form method="post" action="{% url 'staff_clock_out' %}" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="log_id" value="{{ log.pk }}">
+              <button type="submit" class="cafe-btn cafe-btn--primary" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;">Clock out</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="page-card">
+    <div class="page-card__actions">
+      <a href="{% url 'staff_list' %}">Staff list</a>
+    </div>
+    <h2 class="form-heading" style="margin-top: 0;">Recent time log</h2>
+    <table class="cafe-table">
+      <thead>
+        <tr>
+          <th>Staff</th>
+          <th>Start work</th>
+          <th>End work</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in recent_logs %}
+        <tr>
+          <td>{{ log.staff.name }}</td>
+          <td>{{ log.clock_in|date:"Y-m-d H:i" }}</td>
+          <td>{% if log.clock_out %}{{ log.clock_out|date:"Y-m-d H:i" }}{% else %}<span class="cafe-badge cafe-badge--pending">Open</span>{% endif %}</td>
+          <td>{% if log.is_open %}On shift{% else %}Finished{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="cafe-muted">No attendance records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

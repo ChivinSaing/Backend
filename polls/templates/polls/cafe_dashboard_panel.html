@@ -1,0 +1,94 @@
+<div class="cafe-dash">
+  <div class="cafe-dash__header">
+    <p class="cafe-dash__subtitle" style="margin: 0;">Overview — orders, inventory, and customers</p>
+  </div>
+
+  <div class="cafe-dash__cards">
+    <a class="cafe-card" href="{% url 'orders' %}">
+      <span class="cafe-card__label">Orders</span>
+      <span class="cafe-card__value">{{ order_total }}</span>
+    </a>
+    <a class="cafe-card cafe-card--accent" href="{% url 'orders' %}?status=pending">
+      <span class="cafe-card__label">Pending</span>
+      <span class="cafe-card__value">{{ pending_orders }}</span>
+    </a>
+    <a class="cafe-card" href="{% url 'orders' %}?status=completed">
+      <span class="cafe-card__label">Completed</span>
+      <span class="cafe-card__value">{{ completed_orders }}</span>
+    </a>
+    <a class="cafe-card" href="{% url 'inventory' %}">
+      <span class="cafe-card__label">Menu items</span>
+      <span class="cafe-card__value">{{ drink_total }}</span>
+    </a>
+    <a class="cafe-card" href="{% url 'customers' %}">
+      <span class="cafe-card__label">Customers</span>
+      <span class="cafe-card__value">{{ customer_total }}</span>
+    </a>
+    <div class="cafe-card cafe-card--static">
+      <span class="cafe-card__label">Revenue (completed)</span>
+      <span class="cafe-card__value cafe-card__value--sm">${{ revenue|floatformat:2 }}</span>
+    </div>
+  </div>
+
+  <div class="cafe-dash__grid">
+    <section class="cafe-panel">
+      <h2 class="cafe-panel__title">Recent orders</h2>
+      <table class="cafe-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr>
+            <td><a href="{% url 'order_edit' o.pk %}">{{ o.pk }}</a></td>
+            <td>{{ o.user.name }} <span class="cafe-muted">(#{{ o.user_id }})</span></td>
+            <td>{{ o.order_date|date:"Y-m-d H:i" }}</td>
+            <td>${{ o.total_price|floatformat:2 }}</td>
+            <td>
+              {% if o.status == "pending" %}
+                <span class="cafe-badge cafe-badge--pending">Pending</span>
+              {% elif o.status == "completed" %}
+                <span class="cafe-badge cafe-badge--done">Completed</span>
+              {% else %}
+                <span class="cafe-badge">{{ o.get_status_display }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="cafe-muted">No orders yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="cafe-panel">
+      <h2 class="cafe-panel__title">Low stock (≤10)</h2>
+      <table class="cafe-table">
+        <thead>
+          <tr>
+            <th>Drink</th>
+            <th>Stock</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in low_stock %}
+          <tr>
+            <td><a href="{% url 'drink_edit' d.pk %}">{{ d.name }}</a></td>
+            <td>{{ d.stock_qty }}</td>
+            <td>${{ d.price|floatformat:2 }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="cafe-muted">All items above threshold.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>

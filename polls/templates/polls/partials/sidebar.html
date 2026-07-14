@@ -1,0 +1,96 @@
+<aside class="sidebar" aria-label="Main navigation">
+  <div class="sidebar__brand">
+    <span aria-hidden="true">☕</span>
+    <a href="{% url 'home' %}">My Cafe</a>
+  </div>
+  <nav class="sidebar__nav">
+    <a class="sidebar__link{% if active_page == 'dashboard' %} is-active{% endif %}" href="{% url 'home' %}">
+      <span class="sidebar__icon" aria-hidden="true">▣</span>
+      Dashboard
+    </a>
+
+    <details class="sidebar__dropdown" {% if active_page == 'staff_list' or active_page == 'staff_add' or active_page == 'staff_edit' or active_page == 'staff_attendance' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'staff_list' or active_page == 'staff_add' or active_page == 'staff_edit' or active_page == 'staff_attendance' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">◉</span>
+        Staff
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'staff_list' %} is-active{% endif %}" href="{% url 'staff_list' %}">All staff</a>
+        <a class="sidebar__sublink{% if active_page == 'staff_add' %} is-active{% endif %}" href="{% url 'staff_add' %}">Add staff</a>
+        <a class="sidebar__sublink{% if active_page == 'staff_attendance' %} is-active{% endif %}" href="{% url 'staff_attendance' %}">Attendance</a>
+      </div>
+    </details>
+
+    <details class="sidebar__dropdown" {% if active_page == 'categories' or active_page == 'category_add' or active_page == 'category_edit' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'categories' or active_page == 'category_add' or active_page == 'category_edit' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">⚏</span>
+        Categories
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'categories' %} is-active{% endif %}" href="{% url 'categories' %}">All categories</a>
+        <a class="sidebar__sublink{% if active_page == 'category_add' %} is-active{% endif %}" href="{% url 'category_add' %}">Add category</a>
+      </div>
+    </details>
+
+    <details class="sidebar__dropdown" {% if active_page == 'customers' or active_page == 'customer_add' or active_page == 'customer_edit' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'customers' or active_page == 'customer_add' or active_page == 'customer_edit' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">◎</span>
+        Customers
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'customers' %} is-active{% endif %}" href="{% url 'customers' %}">All customers</a>
+        <a class="sidebar__sublink{% if active_page == 'customer_add' %} is-active{% endif %}" href="{% url 'customer_add' %}">Add customer</a>
+      </div>
+    </details>
+
+    <details class="sidebar__dropdown" {% if active_page == 'inventory' or active_page == 'drink_add' or active_page == 'drink_edit' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'inventory' or active_page == 'drink_add' or active_page == 'drink_edit' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">◫</span>
+        Drinks
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'inventory' %} is-active{% endif %}" href="{% url 'inventory' %}">All drinks</a>
+        <a class="sidebar__sublink{% if active_page == 'drink_add' %} is-active{% endif %}" href="{% url 'drink_add' %}">Add drink</a>
+      </div>
+    </details>
+
+    <details class="sidebar__dropdown" {% if active_page == 'order_items' or active_page == 'order_item_add' or active_page == 'order_item_edit' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'order_items' or active_page == 'order_item_add' or active_page == 'order_item_edit' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">≡</span>
+        Order items
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'order_items' %} is-active{% endif %}" href="{% url 'order_items' %}">All lines</a>
+        <a class="sidebar__sublink{% if active_page == 'order_item_add' %} is-active{% endif %}" href="{% url 'order_item_add' %}">Add line</a>
+      </div>
+    </details>
+
+    <details class="sidebar__dropdown" {% if active_page == 'orders' or active_page == 'order_add' or active_page == 'order_edit' %}open{% endif %}>
+      <summary class="sidebar__summary{% if active_page == 'orders' or active_page == 'order_add' or active_page == 'order_edit' %} is-active{% endif %}">
+        <span class="sidebar__chevron" aria-hidden="true">▸</span>
+        <span class="sidebar__icon" aria-hidden="true">☰</span>
+        Orders
+      </summary>
+      <div class="sidebar__menu">
+        <a class="sidebar__sublink{% if active_page == 'orders' %} is-active{% endif %}" href="{% url 'orders' %}">All orders</a>
+        <a class="sidebar__sublink{% if active_page == 'order_add' %} is-active{% endif %}" href="{% url 'order_add' %}">Add order</a>
+      </div>
+    </details>
+  </nav>
+  <div class="sidebar__footer">
+    {% if request.user.is_authenticated %}
+    <form class="sidebar__logout-form" method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="sidebar__link sidebar__logout-btn">
+        <span class="sidebar__icon" aria-hidden="true">⎆</span>
+        Log out
+      </button>
+    </form>
+    {% endif %}
+  </div>
+</aside>

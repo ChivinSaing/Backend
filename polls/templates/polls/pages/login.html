@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — My Cafe</title>
+  <link rel="stylesheet" href="{% static 'polls/css/cafe_app.css' %}">
+</head>
+<body class="login-body">
+  <div class="login-shell">
+    <h1 class="login-title">☕ My Cafe</h1>
+    <p class="login-lead">Staff sign in</p>
+    <form method="post" action="{% url 'login' %}" class="login-form cafe-form">
+      {% csrf_token %}
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+      {% if form.non_field_errors %}
+        <ul class="cafe-form-errors login-errors">
+          {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+      {% for field in form %}
+        <div class="cafe-field{% if field.errors %} cafe-field--error{% endif %}">
+          <label class="cafe-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% for err in field.errors %}<p class="cafe-error">{{ err }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="cafe-btn cafe-btn--primary login-submit">Sign in</button>
+    </form>
+  </div>
+</body>
+</html>

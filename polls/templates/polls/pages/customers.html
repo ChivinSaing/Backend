@@ -1,0 +1,30 @@
+{% extends "polls/layouts/base_app.html" %}
+{% block content %}
+  <div class="page-card">
+    <div class="page-card__actions">
+      <a href="{% url 'customer_add' %}">Add customer</a>
+    </div>
+    <table class="cafe-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in customers %}
+        <tr>
+          <td><a href="{% url 'customer_edit' c.pk %}">{{ c.pk }}</a></td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.phone }}</td>
+          <td>{{ c.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="cafe-muted">No customers yet. Use “Add customer” in the sidebar.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

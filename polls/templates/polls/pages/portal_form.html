@@ -1,0 +1,29 @@
+{% extends "polls/layouts/base_app.html" %}
+{% block content %}
+  <div class="page-card">
+    <div class="page-card__actions">
+      <a href="{{ cancel_href }}">{{ cancel_label }}</a>
+    </div>
+    <h2 class="form-heading">{{ form_heading }}</h2>
+    <form method="post" class="cafe-form"{% if form_multipart %} enctype="multipart/form-data"{% endif %}>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <ul class="cafe-form-errors">
+          {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+      {% for field in form %}
+        <div class="cafe-field{% if field.errors %} cafe-field--error{% endif %}">
+          <label class="cafe-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="cafe-help">{{ field.help_text }}</p>{% endif %}
+          {% for err in field.errors %}<p class="cafe-error">{{ err }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+      <div class="cafe-form-actions">
+        <button type="submit" class="cafe-btn cafe-btn--primary">Save</button>
+        <a href="{{ cancel_href }}" class="cafe-btn cafe-btn--ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

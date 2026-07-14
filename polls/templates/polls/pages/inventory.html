@@ -1,0 +1,44 @@
+{% extends "polls/layouts/base_app.html" %}
+{% block content %}
+  <div class="page-card">
+    <div class="page-card__actions">
+      <a href="{% url 'drink_add' %}">Add drink</a>
+    </div>
+    <table class="cafe-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Sugar</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in drinks %}
+        <tr>
+          <td><a href="{% url 'drink_edit' d.pk %}">{{ d.pk }}</a></td>
+          <td>{{ d.name }}</td>
+          <td>{{ d.category.name }}</td>
+          <td>{{ d.size }}</td>
+          <td>${{ d.price|floatformat:2 }}</td>
+          <td>{{ d.stock_qty }}</td>
+          <td>{{ d.sugar_display }}</td>
+          <td>
+            {% if d.image %}
+              <img src="{{ d.image.url }}" alt="" width="100" height="100" style="object-fit: cover; border-radius: 6px;">
+            {% else %}
+              <span class="cafe-muted">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="cafe-muted">No drinks yet. Use “Add drink” in the sidebar.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
